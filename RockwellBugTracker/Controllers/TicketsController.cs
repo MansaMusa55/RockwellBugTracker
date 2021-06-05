@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RockwellBugTracker.Data;
 using RockwellBugTracker.Extensions;
 using RockwellBugTracker.Models;
+using RockwellBugTracker.Models.ViewModel;
 using RockwellBugTracker.Services.Interfaces;
 
 namespace RockwellBugTracker.Controllers
@@ -16,12 +18,16 @@ namespace RockwellBugTracker.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IBTCompanyInfoService _infoService;
+        private readonly UserManager<BTUser> _userManager;
+        private readonly IBTTicketService _ticketService;
 
 
-        public TicketsController(ApplicationDbContext context, IBTCompanyInfoService infoService)
+        public TicketsController(ApplicationDbContext context, IBTCompanyInfoService infoService, UserManager<BTUser> userManager, IBTTicketService ticketService)
         {
             _context = context;
             _infoService = infoService;
+            _userManager = userManager;
+            _ticketService = ticketService;
         }
 
         // GET: Tickets
@@ -43,6 +49,19 @@ namespace RockwellBugTracker.Controllers
             var tickets = await _infoService.GetAllTicketsAsync(companyId);
 
             return View(tickets);
+        }
+        
+        public async Task<IActionResult> MyTickets()
+        {
+            var userId = _userManager.GetUserId(User);
+            var devTickets = await _ticketService.GetAllTicketsByRoleAsync("Developer", userId);
+            var subTickets = await _ticketService.GetAllTicketsByRoleAsync("Submitter", userId);
+            var viewModel = new MyTicketsViewModel()
+            {
+                DeveloperTickets = devTickets,
+                SubmittedTickets = subTickets
+            };
+            return View(viewModel);
         }
 
         // GET: Tickets/Details/5

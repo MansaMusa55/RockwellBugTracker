@@ -7,5 +7,8 @@ namespace RockwellBugTracker.Models.ViewModel
 {
     public class MyTicketsViewModel
     {
+        public IEnumerable<Ticket> DeveloperTickets { get; set; }
+        public IEnumerable<Ticket> SubmittedTickets { get; set; }
+
     }
 }
