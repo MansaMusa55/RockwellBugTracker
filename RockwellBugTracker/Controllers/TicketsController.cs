@@ -20,14 +20,16 @@ namespace RockwellBugTracker.Controllers
         private readonly IBTCompanyInfoService _infoService;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTTicketService _ticketService;
+        private readonly IBTProjectService _projectService;
 
 
-        public TicketsController(ApplicationDbContext context, IBTCompanyInfoService infoService, UserManager<BTUser> userManager, IBTTicketService ticketService)
+        public TicketsController(ApplicationDbContext context, IBTCompanyInfoService infoService, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService)
         {
             _context = context;
             _infoService = infoService;
             _userManager = userManager;
             _ticketService = ticketService;
+            _projectService = projectService;
         }
 
         // GET: Tickets
@@ -53,10 +55,10 @@ namespace RockwellBugTracker.Controllers
         
         public async Task<IActionResult> MyTickets()
         {
-            var userId = _userManager.GetUserId(User);
-            var devTickets = await _ticketService.GetAllTicketsByRoleAsync("Developer", userId);
-            var subTickets = await _ticketService.GetAllTicketsByRoleAsync("Submitter", userId);
-            var viewModel = new MyTicketsViewModel()
+            string userId = _userManager.GetUserId(User);
+            List<Ticket> devTickets = await _ticketService.GetAllTicketsByRoleAsync("Developer", userId);
+            List<Ticket> subTickets = await _ticketService.GetAllTicketsByRoleAsync("Submitter", userId);
+            MyTicketsViewModel viewModel = new()
             {
                 DeveloperTickets = devTickets,
                 SubmittedTickets = subTickets
@@ -89,14 +91,29 @@ namespace RockwellBugTracker.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Id");
-            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Id");
-            ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id");
-            ViewData["TicketTypeId"] = new SelectList(_context.Set<TicketType>(), "Id", "Id");
+            //Get current user
+            BTUser btUser = await _userManager.GetUserAsync(User);
+
+            //Get current users company
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            //TODO: Filter list 
+            if (User.IsInRole("Admin"))
+            {
+                ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompany(companyId), "Id", "Name");
+            }
+            else
+            {
+                ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(btUser.Id), "Id", "Name");
+            }
+
+
+            ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Name");
+
+
+            ViewData["TicketTypeId"] = new SelectList(_context.Set<TicketType>(), "Id", "Name");
             return View();
         }
 
@@ -105,20 +122,27 @@ namespace RockwellBugTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Created,Updated,Archived,ArchivedDate,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,OwnerUserId,DeveloperUserId")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,ProjectId,TicketPriorityId,TicketTypeId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                ticket.Created = DateTimeOffset.Now;
+
+                string userId = _userManager.GetUserId(User);
+                ticket.OwnerUserId = userId;
+
+                ticket.TicketStatusId = (await _ticketService.LookupTicketStatusIdAsync("New")).Value;
+
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details","Projects", new { id = ticket.ProjectId });
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Id", ticket.TicketPriorityId);
-            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Id", ticket.ProjectId);
-            ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList(_context.Set<TicketType>(), "Id", "Id", ticket.TicketTypeId);
+            //ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
+            //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
+            //ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Id", ticket.TicketPriorityId);
+            //ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Id", ticket.ProjectId);
+            //ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id", ticket.TicketStatusId);
+            //ViewData["TicketTypeId"] = new SelectList(_context.Set<TicketType>(), "Id", "Id", ticket.TicketTypeId);
             return View(ticket);
         }
 

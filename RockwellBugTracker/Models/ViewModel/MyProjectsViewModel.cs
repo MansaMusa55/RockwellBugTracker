@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace RockwellBugTracker.Models.ViewModel
 {
-    public class MyTicketsViewModel
+    public class MyProjectsViewModel
     {
-        public List<Ticket> DeveloperTickets { get; set; }
-        public List<Ticket> SubmittedTickets { get; set; }
-
+        public List<Project> CompanyProjects { get; set; }
     }
 }

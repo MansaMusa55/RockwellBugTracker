@@ -21,4 +21,11 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\cubaTemplate\assets\js\chart\knob\" />
+    <Folder Include="wwwroot\cubaTemplate\assets\js\datepicker\date-picker\" />
+    <Folder Include="wwwroot\cubaTemplate\assets\js\scrollbar\" />
+    <Folder Include="wwwroot\cubaTemplate\assets\js\theme-customizer\" />
+  </ItemGroup>
+
 </Project>

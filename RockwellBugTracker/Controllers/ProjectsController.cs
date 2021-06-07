@@ -34,6 +34,21 @@ namespace RockwellBugTracker.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> AllProjects()
+        {
+            var companyId = User.Identity.GetCompanyId().Value;
+            List<Project> projects = await _companyInfoService.GetAllProjectsAsync(companyId);
+
+            return View(projects);
+        }
+
+        public async Task<IActionResult> MyProjects()
+        {
+            var companyId = User.Identity.GetCompanyId().Value;
+            List<Project> companyProjects = await _projectService.GetAllProjectsByCompany(companyId);
+       
+            return View(companyProjects);
+        }
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -43,6 +58,7 @@ namespace RockwellBugTracker.Controllers
             }
 
             var project = await _context.Project
+                .Include(p => p.Members)
                 .Include(p => p.Company)
                 .Include(p => p.ProjectPriority)
                 .FirstOrDefaultAsync(m => m.Id == id);

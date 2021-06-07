@@ -1,0 +1,83 @@
+﻿@model RockwellBugTracker.Models.ViewModel.DashboardViewModel
+@using RockwellBugTracker.Services.Interfaces
+@using Microsoft.AspNetCore.Identity
+@using RockwellBugTracker.Extensions
+
+@inject IBTCompanyInfoService CompanyService
+@inject IBTRoleService RolesService
+@inject IBTTicketService TicketService
+@inject IBTProjectService ProjectService
+@inject UserManager<BTUser> UserManager
+
+@{
+    int companyId = User.Identity.GetCompanyId().Value;
+    BTUser btUser = await UserManager.GetUserAsync(User);
+}
+<h1> Dashboard</h1>
+<div class="card">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Created</th>
+                <th>End Date</th>
+                <th>Description</th>
+                <th>Members</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in Model.Projects)
+            {
+                <tr>
+                    <td>@project.Name</td>
+                    <td>@project.StartDate</td>
+                    <td>@project.EndDate</td>
+                    <td>@project.Description</td>
+                    <td>@project.Members</td>
+                    <td>@project.ProjectPriority</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@project.Id">Edit</a>
+                        <a asp-action="Details" asp-route-id="@project.Id">Details</a>
+                        <a asp-action="Delete" asp-route-id="@project.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*<h1> My Submitted Tickets</h1>
+<div class="card">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Created</th>
+                <th>Developer</th>
+                <th>Submitter</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in Model.SubmittedTickets)
+            {
+                <tr>
+                    <td>@ticket.Title</td>
+                    <td>@ticket.Created</td>
+                    <td>@ticket.DeveloperUser?.FullName</td>
+                    <td>@ticket.OwnerUser?.FullName</td>
+                    <td>@ticket.Description</td>
+                    <td>@ticket.TicketType.Name</td>
+                    <td>@ticket.TicketPriority.Name</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@ticket.Id">Edit</a>
+                        <a asp-action="Details" asp-route-id="@ticket.Id">Details</a>
+                        <a asp-action="Delete" asp-route-id="@ticket.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>*@
