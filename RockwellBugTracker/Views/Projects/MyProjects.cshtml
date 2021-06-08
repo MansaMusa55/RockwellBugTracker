@@ -1,36 +1,50 @@
 ﻿@model IEnumerable<RockwellBugTracker.Models.Project>
+    <!-- Page Body Start-->
 
-<h1> Developer Tickets</h1>
-<div class="card">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Created</th>
-                <th>Developer</th>
-                <th>Submitter</th>
-                <th>Description</th>
-                <th>Type</th>
-                <th>Priority</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in Model)
-            {
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h1>My Projects</h1>
+
+                </div>
+                <p>
+                    <a asp-action="Create">Create New</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@project.Name</td>
-                    <td>@project.StartDate</td>
-                    <td>@project.EndDate</td>
-                    <td>@project.Description</td>
-                    <td>@project.Archived</td>
-                    <td>@project.ProjectPriority</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@project.Id">Edit</a>
-                        <a asp-action="Details" asp-route-id="@project.Id">Details</a>
-                        <a asp-action="Delete" asp-route-id="@project.Id">Delete</a>
-                    </td>
+                    <th>Name</th>
+                    <th>Created</th>
+                    <th>Developer</th>
+                    <th>Submitter</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Priority</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                    <tr>
+                        <td>@project.Name</td>
+                        <td>@project.StartDate</td>
+                        <td>@project.EndDate</td>
+                        <td>@project.Description</td>
+                        <td>@project.Archived</td>
+                        <td>@project.ProjectPriority.Name</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@project.Id">Edit</a>
+                            <a asp-action="Details" asp-route-id="@project.Id">Details</a>
+                            <a asp-action="Delete" asp-route-id="@project.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

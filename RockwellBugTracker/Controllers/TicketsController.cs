@@ -48,7 +48,7 @@ namespace RockwellBugTracker.Controllers
         public async Task<IActionResult> AllTickets()
         {
             int companyId = User.Identity.GetCompanyId().Value;
-            var tickets = await _infoService.GetAllTicketsAsync(companyId);
+            List<Ticket> tickets = await _infoService.GetAllTicketsAsync(companyId);
 
             return View(tickets);
         }

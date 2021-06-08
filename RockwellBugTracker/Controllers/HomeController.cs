@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RockwellBugTracker.Data;
@@ -21,34 +22,61 @@ namespace RockwellBugTracker.Controllers
         private readonly IBTCompanyInfoService _infoService;
         private readonly IBTTicketService _ticketService;
         private readonly UserManager<BTUser> _userManager;
+        private readonly IBTProjectService _projectService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBTCompanyInfoService infoService, IBTTicketService ticketService, UserManager<BTUser> userManager)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBTCompanyInfoService infoService, IBTTicketService ticketService, UserManager<BTUser> userManager, IBTProjectService projectService)
         {
             _logger = logger;
             _context = context;
             _infoService = infoService;
             _ticketService = ticketService;
             _userManager = userManager;
+            _projectService = projectService;
         }
 
         public IActionResult Index()
         {
             return View();
         }
-
+        [Authorize]
         public async Task<IActionResult> Dashboard()
         {
             int companyId = User.Identity.GetCompanyId().Value;
-            var projects = await _infoService.GetAllProjectsAsync(companyId);
-            var tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
-            var viewModel = new DashboardViewModel
+            List<Project> projects = await _projectService.GetAllProjectsByCompany(companyId);
+
+            int urgent = (await _ticketService.LookupTicketPriorityIdAsync("Urgent")).Value;
+            int high = (await _ticketService.LookupTicketPriorityIdAsync("High")).Value;
+            int medium = (await _ticketService.LookupTicketPriorityIdAsync("Medium")).Value;
+            int low = (await _ticketService.LookupTicketPriorityIdAsync("Low")).Value;
+
+            List<Array> data = new();
+
+            data.Add(new string[] { "Project", "Urgent", "High", "Medium", "Low" });
+            foreach (Project project in projects)
             {
-                Projects = projects,
-                Tickets = tickets,
+                data.Add(new object[] { project.Name,
+                                                    project.Tickets.Where(t => t.TicketStatusId == urgent).Count(),
+                                                    project.Tickets.Where(t => t.TicketStatusId == high).Count(),
+                                                    project.Tickets.Where(t => t.TicketStatusId == medium).Count(),
+                                                    project.Tickets.Where(t => t.TicketStatusId == low).Count()
+                });
+            }
+
+            DashboardViewModel model = new()
+            {
+                Projects = await _projectService.GetAllProjectsByCompany(companyId),
+                Tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId),
+                Users = await _infoService.GetAllMembersAsync(companyId),
+                ChartData = data.ToArray()
             };
-            return View(viewModel);
+
+            return View(model);
         }
 
+        public IActionResult Landing()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
