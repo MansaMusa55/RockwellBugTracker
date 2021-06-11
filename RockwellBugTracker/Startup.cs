@@ -45,6 +45,8 @@ namespace RockwellBugTracker
             services.AddScoped<IBTProjectService, BTProjectService>();
             services.AddScoped<IBTTicketService, BTTicketService>();
             services.AddScoped<IBTCompanyInfoService, BTCompanyInfoService>();
+            services.AddScoped<IBTHistoryService, BTHistoryService>();
+            services.AddScoped<IBTEmailSender, GmailEmailService>();
 
             services.AddMvc();
         }

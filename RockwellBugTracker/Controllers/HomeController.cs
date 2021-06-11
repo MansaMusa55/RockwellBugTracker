@@ -73,6 +73,26 @@ namespace RockwellBugTracker.Controllers
             return View(model);
         }
 
+
+
+        [HttpPost]
+        public async Task<JsonResult> PieChartMethod()
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            List<Project> projects = await _projectService.GetAllProjectsByCompany(companyId);
+
+            List<object> chartData = new();
+            chartData.Add(new object[] { "ProjectName", "TicketCount" });
+
+            foreach (Project prj in projects)
+            {
+                chartData.Add(new object[] { prj.Name, prj.Tickets.Count() });
+            }
+
+            return Json(chartData);
+        }
+
         public IActionResult Landing()
         {
             return View();
