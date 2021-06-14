@@ -56,7 +56,7 @@ namespace RockwellBugTracker.Services
 
             try
             {
-                await _emailSender.SendEmailAsync(btUserEmail, emailSubject, message)
+                await _emailSender.SendEmailAsync(btUserEmail, emailSubject, message);
             }
             catch
             {

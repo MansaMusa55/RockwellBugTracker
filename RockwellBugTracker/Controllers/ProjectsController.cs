@@ -29,12 +29,14 @@ namespace RockwellBugTracker.Controllers
         }
 
         // GET: Projects
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Project.Include(p => p.Company).Include(p => p.ProjectPriority);
             return View(await applicationDbContext.ToListAsync());
         }
 
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> AllProjects()
         {
             var companyId = User.Identity.GetCompanyId().Value;
@@ -73,6 +75,7 @@ namespace RockwellBugTracker.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "Admin, ProjectManager")]
         public IActionResult Create()
         {
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name");
@@ -99,6 +102,7 @@ namespace RockwellBugTracker.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

@@ -129,6 +129,8 @@ namespace RockwellBugTracker.Controllers
             }
 
             var ticket = await _context.Ticket
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.User)
                 .Include(t => t.DeveloperUser)
                 .Include(t => t.OwnerUser)
                 .Include(t => t.TicketPriority)
@@ -140,6 +142,7 @@ namespace RockwellBugTracker.Controllers
             {
                 return NotFound();
             }
+
 
             return View(ticket);
         }
