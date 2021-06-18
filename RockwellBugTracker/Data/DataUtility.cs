@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Npgsql;
 using RockwellBugTracker.Models;
 using RockwellBugTracker.Models.Enums;
+using RockwellBugTracker.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,7 +26,7 @@ namespace RockwellBugTracker.Data
         private static int company6Id;
         private static int company7Id;
 
-
+        
         public static string GetConnectionString(IConfiguration configuration)
         {
             //The default connection string will come from appSettings like usual
@@ -534,7 +535,7 @@ namespace RockwellBugTracker.Data
                 FirstName = "Demo",
                 LastName = "Admin",
                 EmailConfirmed = true,
-                CompanyId = company1Id
+                CompanyId = company1Id,
             };
             try
             {

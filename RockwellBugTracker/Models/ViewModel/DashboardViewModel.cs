@@ -10,6 +10,7 @@ namespace RockwellBugTracker.Models.ViewModel
         public List<Project> Projects { get; set; }
         public List<Ticket> Tickets { get; set; }
         public List<BTUser> Users { get; set; }
+        public string CurrentImage { get; set; }
 
         public Array[] ChartData { get; set; }
         public MyTicketsViewModel MyTickets { get; set; }

@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RockwellBugTracker.Models;
+using RockwellBugTracker.Services.Interfaces;
 
 namespace RockwellBugTracker.Areas.Identity.Pages.Account
 {
@@ -25,17 +29,21 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account
         private readonly UserManager<BTUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IBTImageService _imageService;
+        private readonly IConfiguration _configuration;
 
         public RegisterModel(
             UserManager<BTUser> userManager,
             SignInManager<BTUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, IBTImageService imageService, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _imageService = imageService;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -47,6 +55,9 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Display(Name = "Custom Image")]
+            public IFormFile ImageFile { get; set; }
+
             [Required]
             [DisplayName("First Name")]
             [StringLength(50)]
@@ -89,7 +100,13 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account
                     UserName = Input.Email, 
                     Email = Input.Email,
                     FirstName = Input.FirstName,
-                    LastName = Input.LastName
+                    LastName = Input.LastName,
+                    AvatarFileData = (await _imageService.EncodeImageAsync(Input.ImageFile)) ??
+                            await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"]),
+
+                    AvatarContentType = Input.ImageFile is null ?
+                                            Path.GetExtension(_configuration["DefaultUserImage"]) :
+                                            _imageService.ContentType(Input.ImageFile)
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)

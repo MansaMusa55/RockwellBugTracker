@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RockwellBugTracker.Models;
+using RockwellBugTracker.Services.Interfaces;
 
 namespace RockwellBugTracker.Areas.Identity.Pages.Account.Manage
 {
@@ -14,16 +16,19 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<BTUser> _userManager;
         private readonly SignInManager<BTUser> _signInManager;
+        private readonly IBTImageService _imageService;
 
         public IndexModel(
             UserManager<BTUser> userManager,
-            SignInManager<BTUser> signInManager)
+            SignInManager<BTUser> signInManager, IBTImageService imageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _imageService = imageService;
         }
 
         public string Username { get; set; }
+        public string CurrentImage { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -36,6 +41,9 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            public IFormFile NewImage { get; set; }
+            public byte[] AvatarFileData { get; set; }
+            public string AvatarContentType { get; set; }
         }
 
         private async Task LoadAsync(BTUser user)
@@ -44,6 +52,7 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+            CurrentImage = _imageService.DecodeImage(user.AvatarFileData, user.AvatarContentType);
 
             Input = new InputModel
             {
@@ -87,6 +96,16 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+           
+
+            if(Input.NewImage is not null)
+            {
+                user.AvatarFileData = await _imageService.EncodeImageAsync(Input.NewImage);
+                user.AvatarContentType = Input.NewImage.ContentType;
+                await _userManager.UpdateAsync(user);
+            }
+
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

@@ -24,8 +24,9 @@ namespace RockwellBugTracker.Controllers
         private readonly IBTTicketService _ticketService;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTProjectService _projectService;
+        private readonly IBTImageService _imageService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBTCompanyInfoService infoService, IBTTicketService ticketService, UserManager<BTUser> userManager, IBTProjectService projectService)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBTCompanyInfoService infoService, IBTTicketService ticketService, UserManager<BTUser> userManager, IBTProjectService projectService, IBTImageService imageService)
         {
             _logger = logger;
             _context = context;
@@ -33,6 +34,7 @@ namespace RockwellBugTracker.Controllers
             _ticketService = ticketService;
             _userManager = userManager;
             _projectService = projectService;
+            _imageService = imageService;
         }
 
         public IActionResult Index()
@@ -44,6 +46,8 @@ namespace RockwellBugTracker.Controllers
         {
             int companyId = User.Identity.GetCompanyId().Value;
             List<Project> projects = await _projectService.GetAllProjectsByCompany(companyId);
+
+            BTUser btUser = await _userManager.GetUserAsync(User);
 
             int urgent = (await _ticketService.LookupTicketPriorityIdAsync("Urgent")).Value;
             int high = (await _ticketService.LookupTicketPriorityIdAsync("High")).Value;
@@ -68,6 +72,7 @@ namespace RockwellBugTracker.Controllers
                 Projects = await _projectService.GetAllProjectsByCompany(companyId),
                 Tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId),
                 Users = await _infoService.GetAllMembersAsync(companyId),
+                CurrentImage = _imageService.DecodeImage(btUser.AvatarFileData, btUser.AvatarContentType),
                 ChartData = data.ToArray()
             };
 

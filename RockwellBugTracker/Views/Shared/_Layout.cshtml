@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using RockwellBugTracker.Services.Interfaces 
+
+@inject IBTImageService ImageService 
+@inject SignInManager<BTUser> SignInManager 
+@inject UserManager<BTUser> UserManager 
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -258,12 +265,15 @@
                         <li class="maximize"><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a></li>
                         <li class="profile-nav onhover-dropdown p-0 me-0">
                             <div class="media profile-media">
-                                <img class="b-r-10" src="../assets/images/dashboard/profile.jpg" alt="">
-                                <div class="media-body">
-                                    <span>Emay Walter</span>
-                                    <p class="mb-0 font-roboto">Admin <i class="middle fa fa-angle-down"></i></p>
+                                @*<img class="b-r-10 rounded-circle" src="@Model.CurrentImage" alt="">*@
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    BTUser btUser = await UserManager.GetUserAsync(User);
+                                    <div class="media-body">
+                                        <span>@btUser.FullName</span>
+                                    </div>
+                                }
                                 </div>
-                            </div>
                             <ul class="profile-dropdown onhover-show-div">
                                 <li><a asp-area="Identity" asp-page="/Account/Manage/Index"><i data-feather="user"></i><span>Account </span></a></li>
                                 <li><a href="#"><i data-feather="mail"></i><span>Inbox</span></a></li>
@@ -274,6 +284,7 @@
                         </li>
                     </ul>
                 </div>
+
                 <script class="result-template" type="text/x-handlebars-template">
                     <div class="ProfileCard u-cf">
                         <div class="ProfileCard-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay m-0"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg></div>
