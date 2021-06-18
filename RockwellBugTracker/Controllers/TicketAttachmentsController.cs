@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,12 @@ namespace RockwellBugTracker.Controllers
     public class TicketAttachmentsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BTUser> _userManager;
 
-        public TicketAttachmentsController(ApplicationDbContext context)
+        public TicketAttachmentsController(ApplicationDbContext context, UserManager<BTUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: TicketAttachments
@@ -61,11 +65,22 @@ namespace RockwellBugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                MemoryStream ms = new MemoryStream();
+                await ticketAttachment.FormFile.CopyToAsync(ms);
+
+
+                ticketAttachment.FileData = ms.ToArray();
+                ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
+                ticketAttachment.Created = DateTimeOffset.Now;
+                //ticketAttachment.UserId = _userManager.GetUserId(User);
+
                 _context.Add(ticketAttachment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TicketId"] = new SelectList(_context.Ticket, "Id", "Description", ticketAttachment.TicketId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", ticketAttachment.UserId);
             return View(ticketAttachment);
         }
 

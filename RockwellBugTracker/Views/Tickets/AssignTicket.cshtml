@@ -1,6 +1,16 @@
 ﻿@model RockwellBugTracker.Models.ViewModel.AssignDeveloperViewModel
 
 
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-6">
+                <h1>Assign Ticket</h1>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col">
@@ -9,18 +19,18 @@
                 <form asp-action="AssignTicket" method="post">
                     <div class="card">
                         <div class="body">
-                            <input asp-for="@Model.Ticket.Id" hidden/>
-                            <input asp-for="@Model.Ticket.ProjectId" hidden/>
+                            <input asp-for="@Model.Ticket.Id" hidden />
+                            <input asp-for="@Model.Ticket.ProjectId" hidden />
                             <div class="row clearfix">
                                 <div class="col-md-6 col-sm-12">
                                     <label>Select Developer</label>
                                     <div class="form-group">
-                                        <select class="form-control" asp-for="DeveloperId" asp-items="Model.Developers">
+                                        <select class="form-control" asp-for="@Model.DeveloperId" asp-items="@Model.Developers" multiple="multiple">
                                             <option>Select Developer</option>
                                         </select>
                                     </div>
                                     <div class="mt-4 form-group">
-                                        <button type="submit" class="btn btn-outline-primary">Cancel</button>
+                                        <button type="submit" class="btn btn-outline-primary">Submit</button>
                                         <button asp-action="Dashboard" asp-controller="Home" class="btn btn-outline-primary">Cancel</button>
                                     </div>
                                 </div>

@@ -48,6 +48,7 @@ namespace RockwellBugTracker
             services.AddScoped<IBTHistoryService, BTHistoryService>();
             services.AddScoped<IBTEmailSender, GmailEmailService>();
             services.AddScoped<IBTNotificationService, BTNotificationService>();
+            services.AddScoped<IBTFileService, BTFileService>();
 
             services.AddMvc();
         }

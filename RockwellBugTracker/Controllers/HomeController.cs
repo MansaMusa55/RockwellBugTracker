@@ -10,6 +10,7 @@ using RockwellBugTracker.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -89,6 +90,69 @@ namespace RockwellBugTracker.Controllers
             {
                 chartData.Add(new object[] { prj.Name, prj.Tickets.Count() });
             }
+
+            return Json(chartData);
+        }
+        [HttpPost]
+        public async Task<JsonResult> PieChartStatusMethod()
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            var statuses = _context.TicketStatus.ToList();
+            DonutViewModel chartData = new();
+            chartData.labels = statuses.Select(t => t.Name).ToArray();
+            List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
+            List<SubData> dsArray = new();
+            List<int> howManyTickets = new();
+            List<string> colors = new();
+
+            foreach (TicketStatus status in statuses)
+            {
+                howManyTickets.Add(tickets.Where(t => t.TicketStatusId == status.Id).Count());
+            }
+           
+
+            chartData.datasets = dsArray.ToArray();
+
+            return Json(chartData);
+
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> DonutMethod()
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+            Random rnd = new();
+
+            List<Project> projects = (await _projectService.GetAllProjectsByCompany(companyId)).OrderBy(p => p.Id).ToList();
+
+            DonutViewModel chartData = new();
+            chartData.labels = projects.Select(p => p.Name).ToArray();
+
+            List<SubData> dsArray = new();
+            List<int> tickets = new();
+            List<string> colors = new();
+
+            foreach (Project prj in projects)
+            {
+                tickets.Add(prj.Tickets.Count());
+
+                // This code will randomly select a color for each element of the data 
+                Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                string colorHex = string.Format("#{0:X6}", randomColor.ToArgb() & 0X00FFFFFF);
+
+                colors.Add(colorHex);
+            }
+
+            SubData temp = new()
+            {
+                data = tickets.ToArray(),
+                backgroundColor = colors.ToArray()
+            };
+            dsArray.Add(temp);
+
+            chartData.datasets = dsArray.ToArray();
 
             return Json(chartData);
         }

@@ -1,5 +1,9 @@
 ﻿@model RockwellBugTracker.Models.Ticket
 
+
+@using RockwellBugTracker.Services.Interfaces
+@inject IBTFileService BTFileService 
+
 @{
     ViewData["Title"] = "Details";
 }
@@ -12,90 +16,213 @@
             </div>
             <div class="col offset-4">
                 <a asp-action="Create" class="btn btn-primary btn-block shadow-lg">Create New</a>
+                <a asp-action="AssignTicket" asp-route-ticketId="@Model.Id" class="btn btn-primary btn-block shadow-lg">Assign Ticket</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="text-center">@Model.Title</h2>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Created</th>
-                                <th>Updated</th>
-                                <th>Project</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>@Model.Title</td>
-                                <td>@Model.Description</td>
-                                <td>@Model.Created</td>
-                                <td>@Model.Updated</td>
-                                <td>@Model.Project.Name</td>
-                                <td>@Model.TicketPriority.Name</td>
-                                <td>@Model.TicketStatus.Name</td>
-                                <td>@Model.TicketType.Name</td>
-                            </tr>
-                        </tbody>
-                    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="card o-hidden">
+                <div class="bg-primary b-r-4 card-body">
+                    <div class="media static-top-widget">
+                        <div class="align-self-center text-center"></div>
+                        <div class="media-body">
+                            <span class="m-0">Owner</span>
+                            <h4 class="mb-0 counter">@Model.OwnerUser?.FullName</h4><i class="icon-bg" data-feather="user-plus"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Zero Configuration  Ends-->
-    @*Task 1: List all of the current comments for this ticket
-        Task 2: Give logged in users the ability add a new comment
-    *@
-    <div class="col-6">
-        <div class="card">
-            <div class="card-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col">
-                            <h3 class="text-center">Add Comment</h3>
-                            <form asp-action="Create" asp-controller="TicketComments" method="post">
-                                <input type="hidden" name="TicketId" value="@Model.Id" />
-                                <textarea name="Comment" rows="9" class="form-control"></textarea>
-                                <p>
-                                    <button class="btn btn-primary" type="submit">Submit</button>
-                                </p>
-                            </form>
+        </div>        
+        <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="card o-hidden">
+                <div class="bg-danger b-r-4 card-body">
+                    <div class="media static-top-widget">
+                        <div class="align-self-center text-center"></i></div>
+                        <div class="media-body">
+                            <span class="m-0">Type</span>
+                            <h4 class="mb-0 counter">@Model.TicketType.Name</h4><i class="icon-bg" data-feather="shopping-bag"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<hr />
-<div class="btn-sm btn-dark btn-block">@Model.Comments.Count Comment(s)</div>
 
-@foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
-{
-<div class="row">
-    <div class="col">
-        <div class="media border p-3">
-            <img src="/images/welcome.png" alt="@comment.User.FullName" class="mr-3 mt-3 rounded-circle" style="width:60px;">
-            <div class="media-body">
-                <h4>@comment.User.FullName <small><i>Posted on @comment.Created.ToString("MMM dd , yyyy")</i></small></h4>
-                <p>@comment.Comment</p>
+        <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="card o-hidden">
+                <div class="bg-primary b-r-4 card-body">
+                    <div class="media static-top-widget">
+                        <div class="align-self-center text-center"></div>
+                        <div class="media-body">
+                            <span class="m-0">Status</span>
+                            <h4 class="mb-0 counter">@Model.TicketStatus.Name</h4><i class="icon-bg" data-feather="message-circle"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="card o-hidden">
+                <div class="bg-info b-r-4 card-body">
+                    <div class="media static-top-widget">
+                        <div class="align-self-center text-center"></i></div>
+                        <div class="media-body">
+                            <span class="m-0">Priority</span>
+                            <h4 class="mb-0 counter">@Model.TicketPriority.Name</h4><i class="icon-bg" data-feather="shopping-bag"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="card o-hidden">
+                <div class="bg-warning b-r-4 card-body">
+                    <div class="media static-top-widget">
+                        <div class="align-self-center text-center"></i></div>
+                        <div class="media-body">
+                            <span class="m-0">Assigned To:</span>
+                            <h4 class="mb-0 counter">@Model.DeveloperUser?.FullName</h4><i class="icon-bg" data-feather="shopping-bag"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">@Model.Title</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
+                                        <th>Project</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Model.Title</td>
+                                        <td>@Model.Description</td>
+                                        <td>@Model.Created</td>
+                                        <td>@Model.Updated</td>
+                                        <td>@Model.Project.Name</td>
+                                        <td>@Model.TicketPriority.Name</td>
+                                        <td>@Model.TicketStatus.Name</td>
+                                        <td>@Model.TicketType.Name</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zero Configuration  Ends-->
+            @*Task 1: List all of the current comments for this ticket
+            Task 2: Give logged in users the ability add a new comment
+            *@
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col">
+                                    <h3 class="text-center">Add Comment</h3>
+                                    <form asp-action="Create" asp-controller="TicketComments" method="post">
+                                        <input type="hidden" name="TicketId" value="@Model.Id" />
+                                        <textarea name="Comment" rows="9" class="form-control"></textarea>
+                                        <p>
+                                            <button class="btn btn-primary" type="submit">Submit</button>
+                                        </p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <form asp-action="Create" asp-controller="TicketAttachments" enctype="multipart/form-data" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="@Model.Id" name="TicketId">
+
+
+                        <div class="card-header">
+                            <h3 class="text-center">Add Attachment</h3>
+                        </div>
+                        <div class="card-body">
+                            <label>
+                                Description
+                                <input asp-for="@Model.Attachments.FirstOrDefault().Description" type="text" class="form-control" />
+                            </label><br />
+                            <label class="btn btn-outline-primary btn-sm">
+                                <input asp-for="@Model.Attachments.FirstOrDefault().FormFile" type="file" />
+                            </label>
+                            <button type="submit" class="btn btn-outline-secondary btn-sm md-btn-flat">Submit</button>
+                        </div>
+                    </form>
+                    <div class="card-footer">
+                        <div class="row clearfix">
+                            @foreach (TicketAttachment item in Model.Attachments)
+                            {
+                                <div class="col-sm-2">
+                                    <div class="card">
+                                        <div class="file">
+                                            <a href="javascript:void(0);">
+                                                <div class="hover">
+                                                    <button type="button" class="btn btn-icon btn-danger">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="icon">
+                                                    <img src="@BTFileService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
+                                                </div>
+                                                <div class="file-name">
+                                                    <p class="m-b-5 text-muted">@System.IO.Path.GetFileNameWithoutExtension(item.FileName)</p>
+                                                    <small>Size: @BTFileService.FormatFileSize(item.FileData.Length) <span class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</span></small>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+            {
+
+                <div class="col-6">
+                    <div class="btn-sm btn-dark btn-block">@Model.Comments.Count Comment(s)</div>
+
+                    <div class="media border p-3">
+                        <img src="/images/welcome.png" alt="@comment.User.FullName" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                        <div class="media-body">
+                            <h4>@comment.User.FullName <small><i>Posted on @comment.Created.ToString("MMM dd , yyyy")</i></small></h4>
+                            <p>@comment.Comment</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+
         </div>
     </div>
 </div>
-
-}

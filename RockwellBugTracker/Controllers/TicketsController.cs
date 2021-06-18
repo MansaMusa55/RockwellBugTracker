@@ -135,6 +135,8 @@ namespace RockwellBugTracker.Controllers
                 .Include(t => t.OwnerUser)
                 .Include(t => t.TicketPriority)
                 .Include(t => t.Project)
+                .Include(t => t.History)
+                .Include(t => t.Attachments)
                 .Include(t => t.TicketStatus)
                 .Include(t => t.TicketType)
                 .FirstOrDefaultAsync(m => m.Id == id);
