@@ -357,6 +357,15 @@
                                         <li><a asp-controller="Projects" asp-action="MyProjects">My Projects</a></li>
                                     </ul>
                                 </li>
+                               @if (User.IsInRole("Admin"))
+                               {
+                                <li class="sidebar-list">
+                                    <label class="badge badge-success">2</label><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Users</span></a>
+                                    <ul class="sidebar-submenu">
+                                        <li><a asp-controller="UserRoles" asp-action="ManageUserRoles">Assign Roles</a></li>
+                                    </ul>
+                                </li>
+                               }
                             </ul>
                         </div>
                     </nav>

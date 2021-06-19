@@ -1,11 +1,22 @@
 ﻿@model IEnumerable<RockwellBugTracker.Models.ViewModel.ManageUserRolesViewModel>
 
-<div class="row">
-    @foreach (var btuser in Model)
-    {
-<div class="card col-6" style="margin:2px">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h1>Assign Roles to User</h1>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var btuser in Model)
+        {
+<div class="card col-4 shadow-lg" style="margin:10px">
     <div class="card-body">
-        <h2 class="m-t-0 h3"><b>Assign Roles to @btuser.BTUser.FullName</b></h2>
+        <h2 class="m-t-0 h3"><b>@btuser.BTUser.FullName</b></h2>
         <p class="text-muted font-13 m-b-30">
             This form displays the current roles assigned to the user: @btuser.BTUser.FullName. Use the dropdown to select the roles that this user should be assigned. Once roles are selected, click "Assign Roles" to submit the form.
         </p>
@@ -30,4 +41,4 @@
         </form>
     </div>
 </div>}
-</div>
+    </div>
