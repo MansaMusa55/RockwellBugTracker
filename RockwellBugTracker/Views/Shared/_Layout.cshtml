@@ -31,7 +31,7 @@
     <!-- Flag icon-->
     <link href="~/css/flag-icon-1.css" type="text/css" rel="stylesheet" />
     <!-- Feather icon-->
-    
+
     <link href="~/css/feather-icon.css" type="text/css" rel="stylesheet" />
     <!-- Plugins css start-->
     <link href="~/css/scrollbar.css" type="text/css" rel="stylesheet" />
@@ -41,7 +41,7 @@
     <!-- Plugins css Ends-->
     <!-- Bootstrap css-->
     <link href="~/css/bootstrap.css" type="text/css" rel="stylesheet" />
-    <!-- App css-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">    <!-- App css-->
     <link href="~/css/style1.css" type="text/css" rel="stylesheet" />
     <link href="~/css/color-1.css" type="text/css" rel="stylesheet" />
     <!-- Responsive css-->
@@ -273,7 +273,7 @@
                                         <span>@btUser.FullName</span>
                                     </div>
                                 }
-                                </div>
+                            </div>
                             <ul class="profile-dropdown onhover-show-div">
                                 <li><a asp-area="Identity" asp-page="/Account/Manage/Index"><i data-feather="user"></i><span>Account </span></a></li>
                                 <li><a href="#"><i data-feather="mail"></i><span>Inbox</span></a></li>
@@ -351,21 +351,21 @@
                                     </ul>
                                 </li>
                                 <li class="sidebar-list">
-                                    <label class="badge badge-success">2</label><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Projects</span></a>
+                                    <label class="badge badge-success">2</label><a class="sidebar-link sidebar-title" href="#"><i data-feather="package"></i><span>Projects</span></a>
                                     <ul class="sidebar-submenu">
                                         <li><a asp-controller="Projects" asp-action="AllProjects">All Projects</a></li>
                                         <li><a asp-controller="Projects" asp-action="MyProjects">My Projects</a></li>
                                     </ul>
                                 </li>
-                               @if (User.IsInRole("Admin"))
-                               {
-                                <li class="sidebar-list">
-                                    <label class="badge badge-success">2</label><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Users</span></a>
-                                    <ul class="sidebar-submenu">
-                                        <li><a asp-controller="UserRoles" asp-action="ManageUserRoles">Assign Roles</a></li>
-                                    </ul>
-                                </li>
-                               }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="sidebar-list">
+                                        <label class="badge badge-success">1</label><a class="sidebar-link sidebar-title" href="#"><i data-feather="users"></i><span>Users</span></a>
+                                        <ul class="sidebar-submenu">
+                                            <li><a asp-controller="UserRoles" asp-action="ManageUserRoles">Assign Roles</a></li>
+                                        </ul>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     </nav>
@@ -404,6 +404,8 @@
     <!-- Sidebar jquery-->
     <script src="~/js/config.js"></script>
     <!-- Plugins JS start-->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
     <script src="~/js/sidebar-menu.js"></script>
     <script src="~/js/chartist.js"></script>
     <script src="~/js/chartist-plugin-tooltip.js"></script>
@@ -553,22 +555,6 @@
 
         </script>
     }
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#allTicketsTable').DataTable({
-                "responsive": true,
-                "order": [[3, 'dsc']],
-                columnDefs: [
-                    { targets: [2, 4, 8], visible: false },
-                    { "orderData": 2, targets: [1] },
-                    { "orderData": 4, targets: [3] },
-                    { "orderData": 8, targets: [7] },
-                    { "searchable": false, "targets": 9 },
-                    { targets: '_all', visible: true }
-                ]
-            });
-    </script>
     <!-- login js-->
     <!-- Plugin used-->
 </body>
