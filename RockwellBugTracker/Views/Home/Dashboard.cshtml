@@ -12,96 +12,98 @@
 @inject SignInManager<BTUser> SignInManager
 <div class="card">
 <!-- Page Body Start-->
-@if (SignInManager.IsSignedIn(User))
-{
-    BTUser btUser = await UserManager.GetUserAsync(User);
-    <div class="container-fluid">
-        <div class="page-title">
-            <div class="row">
-                <div class="col-6">
-                    <h3>
-                        Welcome @btUser.FullName!
-                    </h3>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        BTUser btUser = await UserManager.GetUserAsync(User);
+        <div class="container-fluid">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-6">
+                        <h3>
+                            Welcome @btUser.FullName!
+                        </h3>
+
+                    </div>
+                    <div class="col offset-3">
+                        <a asp-controller="Tickets" asp-action="AllTickets" class="btn btn-info btn-md shadow-lg" type="submit">View All Tickets</a>
+
+
+                        <a asp-controller="Tickets" asp-action="MyTickets" class="btn btn-success btn-md shadow-lg" type="submit">View My Tickets</a>
+                    </div>
+
+
 
                 </div>
-                <div class="col offset-3">
-                    <a asp-controller="Tickets" asp-action="AllTickets" class="btn btn-info btn-md shadow-lg" type="submit">View All Tickets</a>
-
-
-                    <a asp-controller="Tickets" asp-action="MyTickets" class="btn btn-success btn-md shadow-lg" type="submit">View My Tickets</a>
-                </div>
-
-
-
             </div>
         </div>
+    }
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row second-chart-list third-news-update">
+
+                <div class="col-sm-6 col-xl-3 col-lg-6">
+                    <div class="card o-hidden shadow-lg">
+                        <div class="bg-danger b-r-4 card-body">
+                            <div class="media static-top-widget">
+                                <div class="align-self-center text-center"></i></div>
+                                <div class="media-body">
+                                    <span class="m-0">Number of Projects</span>
+                                    <h4 class="mb-0 counter">@Model.Projects.Count()</h4><i class="icon-bg" data-feather="shopping-bag"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-xl-3 col-lg-6">
+                    <div class="card o-hidden shadow-lg">
+                        <div class="bg-warning b-r-4 card-body">
+                            <div class="media static-top-widget">
+                                <div class="align-self-center text-center"></div>
+                                <div class="media-body">
+                                    <span class="m-0">Number of Team Members</span>
+                                    <h4 class="mb-0 counter">@Model.Users.Count()</h4><i class="icon-bg" data-feather="user-plus"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3 col-lg-6">
+                    <div class="card o-hidden shadow-lg">
+                        <div class="bg-primary b-r-4 card-body">
+                            <div class="media static-top-widget">
+                                <div class="align-self-center text-center"></div>
+                                <div class="media-body">
+                                    <span class="m-0">Number of Tickets</span>
+                                    <h4 class="mb-0 counter">@Model.Tickets.Count()</h4><i class="icon-bg" data-feather="alert-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-xl-3 col-lg-6">
+                    <div class="card o-hidden shadow-lg">
+                        <div class="bg-warning b-r-4 card-body">
+                            <div class="media static-top-widget">
+                                <div class="align-self-center text-center"></div>
+                                <div class="media-body">
+                                    <span class="m-0">Unassigned Tickets</span>
+                                    <h4 class="mb-0 counter">@Model.UnassignedTickets.Count()</h4><i class="icon-bg" data-feather="user-plus"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
     </div>
-}
-<!-- Container-fluid starts-->
-<div class="container-fluid">
-    <div class="row second-chart-list third-news-update">
-
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6 col-xl-3 col-lg-6">
-                <div class="card o-hidden shadow-lg">
-                    <div class="bg-danger b-r-4 card-body">
-                        <div class="media static-top-widget">
-                            <div class="align-self-center text-center"></i></div>
-                            <div class="media-body">
-                                <span class="m-0">Number of Projects</span>
-                                <h4 class="mb-0 counter">@Model.Projects.Count()</h4><i class="icon-bg" data-feather="shopping-bag"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-xl-3 col-lg-6">
-                <div class="card o-hidden shadow-lg">
-                    <div class="bg-warning b-r-4 card-body">
-                        <div class="media static-top-widget">
-                            <div class="align-self-center text-center"></div>
-                            <div class="media-body">
-                                <span class="m-0">Number of Team Members</span>
-                                <h4 class="mb-0 counter">@Model.Users.Count()</h4><i class="icon-bg" data-feather="user-plus"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xl-3 col-lg-6">
-                <div class="card o-hidden shadow-lg">
-                    <div class="bg-primary b-r-4 card-body">
-                        <div class="media static-top-widget">
-                            <div class="align-self-center text-center"></div>
-                            <div class="media-body">
-                                <span class="m-0">Number of Tickets</span>
-                                <h4 class="mb-0 counter">@Model.Tickets.Count()</h4><i class="icon-bg" data-feather="alert-circle"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-xl-3 col-lg-6">
-                <div class="card o-hidden shadow-lg">
-                    <div class="bg-warning b-r-4 card-body">
-                        <div class="media static-top-widget">
-                            <div class="align-self-center text-center"></div>
-                            <div class="media-body">
-                                <span class="m-0">Unassigned Tickets</span>
-                                <h4 class="mb-0 counter">@Model.UnassignedTickets.Count()</h4><i class="icon-bg" data-feather="user-plus"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             @if (SignInManager.IsSignedIn(User))
             {
                 BTUser btUser = await UserManager.GetUserAsync(User);
 
-                <div class="col-xl-4 col-lg-12 xl-50 morning-sec box-col-12">
+                <div class="col-4">
                     <div class="card custom-card p-0 shadow-lg">
                         <div class="card-header"><img class="img-fluid" src="/images/profile-bg.jpg" alt=""></div>
                         <div class="card-profile"><img class="rounded-circle" src="@Model.CurrentImage" alt=""></div>
@@ -134,26 +136,43 @@
                     </div>
                 </div>
             }
-            <div class="col-xl-8 xl-100 dashboard-sec box-col-12">
+
+            <div class="col-8">
 
 
 
 
                 <div class="card card-success card-tabs">
                     <div class="card-header p-0 pt-1">
-                        <div class="card-title"><h5>Ticket Information</h5></div>
+                        <div class="card-title"><h5 class="text-center">Ticket Information</h5></div>
                     </div>
                     <div class="card-body">
-
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="card">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <canvas id="myChart2"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <canvas id="myChart3"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
 
 
             </div>
-
-
         </div>
+    </div>
+</div>
 
         <hr />
         <div class="card">
@@ -180,6 +199,7 @@
                                                 <th>Name</th>
                                                 <th>Created</th>
                                                 <th>Updated</th>
+                                                <th>Owner</th>
                                                 <th>Type</th>
                                                 <th>Priority</th>
                                                 <th></th>
@@ -191,7 +211,7 @@
                                                 <tr>
                                                     <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id">@ticket.Title</a></td>
                                                     <td>@string.Format("{0:MMM dd yyyy}", ticket.Created)</td>
-                                                    @*<td hidden>@(ticket.Created.ToUnixTimeSeconds())</td>
+                                                    @*<td hidden>@(ticket.Created.ToUnixTimeSeconds())</td>*@
 
                                                     <td>@string.Format("{0:MMM dd yyyy hh:mm tt}", ticket.Updated)</td>
                                                     @if (ticket.Updated is not null)
@@ -199,10 +219,6 @@
 
                                                         <td>@(ticket.Updated.Value.ToUnixTimeSeconds())</td>
                                                     }
-                                                    else
-                                                    {
-                                                        <td></td>
-                                                    }*@
                                                     <td>@ticket.OwnerUser?.FullName</td>
                                                     <td>@ticket.TicketType.Name</td>
                                                     <td><span class="span badge rounded-pill pill-badge-secondary">@ticket.TicketPriority.Name</span></td>
@@ -243,66 +259,67 @@
 
                     @*ChartJS*@
                     <!--<div class="row clearfix">
-                <div class="col-lg-4 col-md-6">
-                    <div class="card">
-                        <div class="body">
-                            <canvas id="donutChart">
-                            </canvas>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="body">
+                                <canvas id="donutChart">
+                                </canvas>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>-->
+                </div>-->
                     <!--<section class="content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">-->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">-->
                     <!-- DONUT CHART -->
                     <!--<div class="card card-danger">
-                                <div class="card-header">
-                                    <h3 class="card-title">Company Ticket Distribution</h3>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="donutChart">
-                                    </canvas>
+                                    <div class="card-header">
+                                        <h3 class="card-title">Company Ticket Distribution</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="donutChart">
+                                        </canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>-->
+                </section>-->
                 </div>
             </div>
-</div>
+        </div>
 
-            <!-- Container-fluid Ends-->
-            @section scripts{
-                <script>
+        <!-- Container-fluid Ends-->
+        @section scripts{
+            <script>
 
-                    $(document).ready(function () {
-                        $('#developmentTable').DataTable({
-                            "responsive": true,
-                            "order": [[3, 'dsc']],
-                            "sScrollX": "100%",
-                            columnDefs: [
-                                { targets: [2, 4, 8], visible: false },
-                                { "orderData": 2, targets: [1] },
-                                { "orderData": 4, targets: [3] },
-                                { "orderData": 8, targets: [7] },
-                                { "searchable": false, "targets": 9 },
-                                { targets: '_all', visible: true }
-                            ]
-                        });
-                        $('#submittedTable').DataTable({
-                            "order": [[3, 'dsc']],
-                            "sScrollX": "100%",
-                            columnDefs: [
-                                { targets: [2, 4, 9], visible: false },
-                                { "orderData": 2, targets: [1] },
-                                { "orderData": 4, targets: [3] },
-                                { "orderData": 9, targets: [8] },
-                                { "searchable": false, "targets": 9 },
-                                { targets: '_all', visible: true }
-                            ]
-                        });
-                </script>
-                }
+                $(document).ready(function () {
+                    $('#developmentTable').DataTable({
+                        "responsive": true,
+                        "order": [[3, 'dsc']],
+                        "sScrollX": "100%",
+                        columnDefs: [
+                            { targets: [2, 4, 8], visible: false },
+                            { "orderData": 2, targets: [1] },
+                            { "orderData": 4, targets: [3] },
+                            { "orderData": 8, targets: [7] },
+                            { "searchable": false, "targets": 9 },
+                            { targets: '_all', visible: true }
+                        ]
+                    });
+                    $('#submittedTable').DataTable({
+                        "order": [[3, 'dsc']],
+                        "sScrollX": "100%",
+                        columnDefs: [
+                            { targets: [2, 4, 9], visible: false },
+                            { "orderData": 2, targets: [1] },
+                            { "orderData": 4, targets: [3] },
+                            { "orderData": 9, targets: [8] },
+                            { "searchable": false, "targets": 9 },
+                            { targets: '_all', visible: true }
+                        ]
+                    });
+            </script>
+
+        }

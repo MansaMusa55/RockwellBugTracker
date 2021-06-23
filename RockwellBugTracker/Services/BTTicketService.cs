@@ -42,6 +42,23 @@ namespace RockwellBugTracker.Services
             }
         }
 
+
+        public async Task<List<Ticket>> GetAllTicketsByProjectAsync(int projectId)
+        {
+            var tickets = await _context.Ticket.Include(t => t.OwnerUser)
+                                                .Include(t => t.DeveloperUser)
+                                                .Include(t => t.TicketPriority)
+                                                .Include(t => t.TicketStatus)
+                                                .Include(t => t.TicketType)
+                                                .Include(t => t.Attachments)
+                                                .Include(t => t.History)
+                                                .Include(t => t.Comments)
+                                                .Where(t => t.ProjectId == projectId)
+
+                                                .ToListAsync();
+            return tickets;
+        }
+
         public async Task<List<Ticket>> GetAllPMTicketsAsync(string userId)
         {
             List<Project> projects = await _projectService.ListUserProjectsAsync(userId);

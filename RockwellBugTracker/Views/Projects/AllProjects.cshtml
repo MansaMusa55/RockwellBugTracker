@@ -5,7 +5,6 @@
 }
 
 <!-- Page Body Start-->
-
 <div class="container-fluid">
     <div class="page-title">
         <div class="row">
@@ -20,7 +19,7 @@
     </div>
 </div>
 
-<table class="table">
+<table class="table table-respn">
     <thead>
         <tr>
             <th>
@@ -88,7 +87,7 @@
                     @Html.DisplayFor(modelItem => item.Company.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProjectPriority.Id)
+                    @Html.DisplayFor(modelItem => item.ProjectPriority.Name)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
