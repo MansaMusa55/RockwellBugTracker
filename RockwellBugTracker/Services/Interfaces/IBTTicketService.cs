@@ -11,6 +11,8 @@ namespace RockwellBugTracker.Services.Interfaces
         Task AssignTicketAsync(int ticketId, string userId);
 
         Task<BTUser> GetTicketDeveloperAsync(int ticketId);
+        Task<List<Ticket>> GetAllUnassignedTicketsAsync(int companyId);
+        Task<List<Ticket>> GetAllDeveloperTicketsByResolvedAsync(string userId, bool isResolvedOrNot);
 
         Task<List<Ticket>> GetAllTicketsByCompanyAsync(int companyId);
 

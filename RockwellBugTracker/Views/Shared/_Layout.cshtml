@@ -364,7 +364,8 @@
                                         <ul class="sidebar-submenu">
                                             <li><a asp-controller="UserRoles" asp-action="ManageUserRoles">Assign Roles</a></li>
                                         </ul>
-                                    </li> <li class="sidebar-list">
+                                    </li>
+                                    <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title" asp-action="Create" asp-controller="Invites"><i data-feather="message-square"></i><span>Company Invites</span></a>
                                     </li>
                                 }
@@ -425,6 +426,8 @@
     <script src="~/js/handlebars.js"></script>
     <script src="~/js/typeahead-custom.js"></script>
     <script src="~/js/tooltip-init.js"></script>
+    <script src="~/js/datatable.custom.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="~/js/script.js" asp-append-version="true"></script>
@@ -447,13 +450,13 @@
 
                     //3D Pie
                     var options = {
-                        title: 'Company Ticket Distribution',
+                        title: 'Ticket Status Distribution',
                         is3D: true
                     };
                     var chart = new google.visualization.PieChart($("#chart3D")[0]);
                     chart.draw(data, options);
                 },
-                failure: function (rresult) {
+                failure: function (result) {
                     alert(result.d);
                 },
                 error: function (result) {
@@ -522,91 +525,9 @@
             });
         }
     </script>
-    @section scripts{
-        <script type="text/javascript">
-            $.ajax({
-                type: "POST",
-                url: "/Home/DonutMethod",
-                data: '{}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (result) {
-                    //Donut
-                    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-                    var donutData = result
-
-                    var donutOptions = {
-                        maintainAspectRatio: false,
-                        responsive: true,
-                    }
-                    //Create pie or douhnut chart
-                    // You can switch between pie and douhnut using the method below.
-                    new Chart(donutChartCanvas, {
-                        type: 'doughnut',
-                        data: donutData,
-                        options: donutOptions
-                    })
-                },
-                failure: function (result) {
-                    alert(result.d);
-                },
-                error: function (result) {
-                    alert(result.d);
-                }
-            });
-
-        </script>
-    }
     <!-- login js-->
     <!-- Plugin used-->
 </body>
 </html>
 
 
-@*<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - RockwellBugTracker</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RockwellBugTracker</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - RockwellBugTracker - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>*@

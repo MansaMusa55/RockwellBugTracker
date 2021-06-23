@@ -46,7 +46,7 @@ namespace RockwellBugTracker.Controllers
         {
             int companyId = User.Identity.GetCompanyId().Value;
             List<Project> projects = await _projectService.GetAllProjectsByCompany(companyId);
-
+            string userId = _userManager.GetUserId(User);
             BTUser btUser = await _userManager.GetUserAsync(User);
 
             int urgent = (await _ticketService.LookupTicketPriorityIdAsync("Urgent")).Value;
@@ -73,7 +73,11 @@ namespace RockwellBugTracker.Controllers
                 Tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId),
                 Users = await _infoService.GetAllMembersAsync(companyId),
                 CurrentImage = _imageService.DecodeImage(btUser.AvatarFileData, btUser.AvatarContentType),
-                ChartData = data.ToArray()
+                ChartData = data.ToArray(),
+                UnresolvedDevelopmentTickets = await _ticketService.GetAllDeveloperTicketsByResolvedAsync(userId, false),
+                DevelopementTickets = await _ticketService.GetAllTicketsByRoleAsync("Developer", userId),
+                SubmittedTickets = await _ticketService.GetAllTicketsByRoleAsync("Submitter", userId),
+                UnassignedTickets = await _ticketService.GetAllUnassignedTicketsAsync(companyId),
             };
 
             return View(model);
@@ -99,32 +103,55 @@ namespace RockwellBugTracker.Controllers
             return Json(chartData);
         }
         [HttpPost]
-        public async Task<JsonResult> PieChartStatusMethod()
+        public async Task<JsonResult> StatusChartMethod(bool dev)
         {
+            //bool dev, int userId
             int companyId = User.Identity.GetCompanyId().Value;
+            string userId = _userManager.GetUserId(User);
+            Random rnd = new();
 
+
+            List<Ticket> tickets;
+            if (dev)
+            {
+                tickets = await _ticketService.GetAllDeveloperTicketsByResolvedAsync(userId, false);
+            }
+            else
+            {
+                tickets = await _ticketService.GetAllTicketsByRoleAsync("Submitter", userId);
+
+            }
             var statuses = _context.TicketStatus.ToList();
             DonutViewModel chartData = new();
             chartData.labels = statuses.Select(t => t.Name).ToArray();
-            List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
+
             List<SubData> dsArray = new();
             List<int> howManyTickets = new();
             List<string> colors = new();
-
+            //Antonio's Random Colors
             foreach (TicketStatus status in statuses)
             {
                 howManyTickets.Add(tickets.Where(t => t.TicketStatusId == status.Id).Count());
+
+                // This code will randomly select a color for each element of the data 
+                Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                string colorHex = string.Format("#{0:X6}", randomColor.ToArgb() & 0X00FFFFFF);
+
+                colors.Add(colorHex);
             }
-           
+
+            SubData temp = new()
+            {
+                data = howManyTickets.ToArray(),
+                backgroundColor = colors.ToArray()
+            };
+            dsArray.Add(temp);
 
             chartData.datasets = dsArray.ToArray();
 
             return Json(chartData);
-
         }
-
-
-        [HttpPost]
+            [HttpPost]
         public async Task<JsonResult> DonutMethod()
         {
             int companyId = User.Identity.GetCompanyId().Value;

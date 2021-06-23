@@ -27,6 +27,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\cubaTemplate\assets\fonts\font-awesome\" />
     <Folder Include="wwwroot\cubaTemplate\assets\js\chart\knob\" />
+    <Folder Include="wwwroot\cubaTemplate\assets\js\datatable\datatables\" />
     <Folder Include="wwwroot\cubaTemplate\assets\js\datepicker\date-picker\" />
     <Folder Include="wwwroot\cubaTemplate\assets\js\scrollbar\" />
     <Folder Include="wwwroot\cubaTemplate\assets\js\theme-customizer\" />

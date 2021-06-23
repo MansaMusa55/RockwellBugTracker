@@ -10,6 +10,7 @@ namespace RockwellBugTracker.Models.ViewModel
         public string[] labels { get; set; }
         public SubData[] datasets { get; set; }
     }
+
     public class SubData
     {
         public int[] data { get; set; }

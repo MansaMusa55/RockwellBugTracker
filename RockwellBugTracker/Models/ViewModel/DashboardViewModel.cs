@@ -11,7 +11,10 @@ namespace RockwellBugTracker.Models.ViewModel
         public List<Ticket> Tickets { get; set; }
         public List<BTUser> Users { get; set; }
         public string CurrentImage { get; set; }
-
+        public List<Ticket> DevelopementTickets { get; set; }
+        public List<Ticket> SubmittedTickets { get; set; }
+        public List<Ticket> UnassignedTickets { get; set; }
+        public List<Ticket> UnresolvedDevelopmentTickets { get; set; }
         public Array[] ChartData { get; set; }
         public MyTicketsViewModel MyTickets { get; set; }
  

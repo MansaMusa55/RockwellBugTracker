@@ -1,126 +1,126 @@
 ﻿@model RockwellBugTracker.Models.ViewModel.MyTicketsViewModel
 <!-- Page Body Start-->
+<div class="card">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h1>My Tickets</h1>
 
-<div class="container-fluid">
-    <div class="page-title">
-        <div class="row">
-            <div class="col-6">
-                <h1>My Tickets</h1>
-
+                </div>
+                <p>
+                    <a asp-action="Create">Create New</a>
+                </p>
             </div>
-            <p>
-                <a asp-action="Create">Create New</a>
-            </p>
         </div>
     </div>
-</div>
 
-<div class="col-xl-12 box-col-12">
-    <div class="card">
-        <div class="card-header">
-            <h5>Developer Tickets</h5>
-            <div class="card-header-right">
-                <ul class="list-unstyled card-option">
-                    <li><i class="fa fa-spin fa-cog"></i></li>
-                    <li><i class="view-html fa fa-code"></i></li>
-                    <li><i class="icofont icofont-maximize full-card"></i></li>
-                    <li><i class="icofont icofont-minus minimize-card"></i></li>
-                    <li><i class="icofont icofont-refresh reload-card"></i></li>
-                    <li><i class="icofont icofont-error close-card"></i></li>
-                </ul>
+    <div class="col-xl-12 box-col-12">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h5>Developer Tickets</h5>
+                <div class="card-header-right">
+                    <ul class="list-unstyled card-option">
+                        <li><i class="fa fa-spin fa-cog"></i></li>
+                        <li><i class="view-html fa fa-code"></i></li>
+                        <li><i class="icofont icofont-maximize full-card"></i></li>
+                        <li><i class="icofont icofont-minus minimize-card"></i></li>
+                        <li><i class="icofont icofont-refresh reload-card"></i></li>
+                        <li><i class="icofont icofont-error close-card"></i></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="user-status table-responsive">
-                <table class="table table-bordernone">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Developer</th>
-                            <th scope="col">Submitter</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Priority</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ticket in Model.SubmittedTickets)
-                        {
+            <div class="card-body">
+                <div class="user-status table-responsive">
+                    <table class="table table-bordernone">
+                        <thead>
                             <tr>
-                                <td class="f-w-600">@ticket.Title</td>
-                                <td>@ticket.Created</td>
-                                <td class="font-primary">@ticket.DeveloperUser?.FullName</td>
-                                <td class="font-primary">@ticket.OwnerUser?.FullName</td>
-                                <td class="font-primary">@ticket.Description</td>
-                                <td>
-                                    <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketType.Name</div>
-                                </td>
-                                <td>
-                                    <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketPriority.Name</div>
-                                </td>
+                                <th scope="col">Name</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Developer</th>
+                                <th scope="col">Submitter</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Priority</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in Model.SubmittedTickets)
+                            {
+                                <tr>
+                                    <td class="f-w-600">@ticket.Title</td>
+                                    <td>@ticket.Created</td>
+                                    <td class="font-primary">@ticket.DeveloperUser?.FullName</td>
+                                    <td class="font-primary">@ticket.OwnerUser?.FullName</td>
+                                    <td class="font-primary">@ticket.Description</td>
+                                    <td>
+                                        <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketType.Name</div>
+                                    </td>
+                                    <td>
+                                        <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketPriority.Name</div>
+                                    </td>
+                                </tr>
 
 
-                        }
-                    </tbody>
-                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="col-xl-12 box-col-12">
-    <div class="card">
-        <div class="card-header">
-            <h5>My Submitted Tickets</h5>
-            <div class="card-header-right">
-                <ul class="list-unstyled card-option">
-                    <li><i class="fa fa-spin fa-cog"></i></li>
-                    <li><i class="view-html fa fa-code"></i></li>
-                    <li><i class="icofont icofont-maximize full-card"></i></li>
-                    <li><i class="icofont icofont-minus minimize-card"></i></li>
-                    <li><i class="icofont icofont-refresh reload-card"></i></li>
-                    <li><i class="icofont icofont-error close-card"></i></li>
-                </ul>
+    <div class="col-xl-12 box-col-12">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h5>My Submitted Tickets</h5>
+                <div class="card-header-right">
+                    <ul class="list-unstyled card-option">
+                        <li><i class="fa fa-spin fa-cog"></i></li>
+                        <li><i class="view-html fa fa-code"></i></li>
+                        <li><i class="icofont icofont-maximize full-card"></i></li>
+                        <li><i class="icofont icofont-minus minimize-card"></i></li>
+                        <li><i class="icofont icofont-refresh reload-card"></i></li>
+                        <li><i class="icofont icofont-error close-card"></i></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="user-status table-responsive">
-                <table class="table table-bordernone">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Developer</th>
-                            <th scope="col">Submitter</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Priority</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ticket in Model.SubmittedTickets)
-                        {
+            <div class="card-body">
+                <div class="user-status table-responsive">
+                    <table class="table table-bordernone">
+                        <thead>
                             <tr>
-                                <td class="f-w-600">@ticket.Title</td>
-                                <td>@ticket.Created</td>
-                                <td class="font-primary">@ticket.DeveloperUser?.FullName</td>
-                                <td class="font-primary">@ticket.OwnerUser?.FullName</td>
-                                <td class="font-primary">@ticket.Description</td>
-                                <td>
-                                    <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketType.Name</div>
-                                </td>
-                                <td>
-                                    <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketPriority.Name</div>
-                                </td>
+                                <th scope="col">Name</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Developer</th>
+                                <th scope="col">Submitter</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Priority</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in Model.SubmittedTickets)
+                            {
+                                <tr>
+                                    <td class="f-w-600">@ticket.Title</td>
+                                    <td>@ticket.Created</td>
+                                    <td class="font-primary">@ticket.DeveloperUser?.FullName</td>
+                                    <td class="font-primary">@ticket.OwnerUser?.FullName</td>
+                                    <td class="font-primary">@ticket.Description</td>
+                                    <td>
+                                        <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketType.Name</div>
+                                    </td>
+                                    <td>
+                                        <div class="span badge rounded-pill pill-badge-secondary">@ticket.TicketPriority.Name</div>
+                                    </td>
+                                </tr>
 
 
-                        }
-                    </tbody>
-                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
-

@@ -50,6 +50,15 @@ namespace RockwellBugTracker.Services
             return tickets;
         }
 
+
+        public async Task<List<Ticket>> GetAllUnassignedTicketsAsync(int companyId)
+        {
+            var newTickets = await GetAllTicketsByStatusAsync(companyId, "New");
+            var unassignedTickets = await GetAllTicketsByStatusAsync(companyId, "Unassigned");
+            return newTickets.Concat(unassignedTickets).Where(t => !t.Archived).ToList();
+        }
+
+
         public async Task<List<Ticket>> GetAllTicketsByCompanyAsync(int companyId)
         {
             try
@@ -289,6 +298,13 @@ namespace RockwellBugTracker.Services
 
             return ticket.DeveloperUser;
         }
+        public async Task<List<Ticket>> GetAllDeveloperTicketsByResolvedAsync(string userId, bool isResolvedOrNot)
+        {
+            var userTickets = await GetAllTicketsByRoleAsync("Developer", userId);
+            var filteredTickets = userTickets.Where(t => ((t.TicketStatus.Name == "Resolved") == isResolvedOrNot) && t.TicketStatus.Name != "Archived").ToList();
+            return filteredTickets;
+        }
+
 
         public async Task<int?> LookupTicketPriorityIdAsync(string priorityName)
         {

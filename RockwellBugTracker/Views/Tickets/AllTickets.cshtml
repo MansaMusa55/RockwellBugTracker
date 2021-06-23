@@ -5,121 +5,122 @@
 }
 
 
+<div class="card">
+    <!-- Page Body Start-->
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h1>All Tickets</h1>
 
-<!-- Page Body Start-->
-<div class="container-fluid">
-    <div class="page-title">
-        <div class="row">
-            <div class="col-6">
-                <h1>All Tickets</h1>
-
-            </div>
-            <div class="col offset-4">
-                <a asp-action="Create" class="btn btn-info btn-block shadow-lg">Create New</a>
+                </div>
+                <div class="col offset-4">
+                    <a asp-action="Create" class="btn btn-info btn-block shadow-lg">Create New</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="col-sm-12">
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table id="allTicketsTable" class="table table-border">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Title)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Description)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Created)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Updated)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Archived)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ArchivedDate)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Project)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.TicketPriority)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.TicketStatus)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.TicketType)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.OwnerUser)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.DeveloperUser)
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="allTicketsTable" class="table table-border">
+                        <thead>
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Title)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Description)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Created)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Updated)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Archived)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ArchivedDate)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Project.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-                                </td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                </td>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Title)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Created)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Updated)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Archived)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ArchivedDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Project)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TicketPriority)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TicketStatus)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TicketType)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OwnerUser)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DeveloperUser)
+                                </th>
+                                <th></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Updated)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Archived)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ArchivedDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Project.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-info btn-sm"asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                                        <a class="btn btn-success btn-sm" asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                                        <a class="btn btn-warning btn-sm" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
+@section Scripts{ 
 <script type="text/javascript">
         $(document).ready(function () {
             $('#allTicketsTable').DataTable({
@@ -135,3 +136,4 @@
                 //]
             });
 </script>
+    }

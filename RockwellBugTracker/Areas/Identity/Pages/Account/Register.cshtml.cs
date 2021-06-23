@@ -71,6 +71,7 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
+            public int CompanyId { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -101,6 +102,7 @@ namespace RockwellBugTracker.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
+                    CompanyId = Input.CompanyId,
                     AvatarFileData = (await _imageService.EncodeImageAsync(Input.ImageFile)) ??
                             await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"]),
 
