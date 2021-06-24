@@ -23,11 +23,13 @@
         <hr />
         <form asp-controller="UserRoles" asp-action="ManageUserRoles" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="@btuser.BTUser.Id">
+            @*<input type="hidden" asp-for="@btuser.BTUser.Id">*@
+            <input type="hidden" name="BTUserId" value="@btuser.BTUser.Id">
             <div class="col-12">
                 <div class="form-group">
                     <label asp-for="@btuser.Roles" class="control-label">Roles for @btuser.BTUser.FullName</label>
-                    <select asp-for="@btuser.SelectedRoles" class="form-control" asp-items="@btuser.Roles" multiple="multiple"></select>
+                    @*<select asp-for="@btuser.SelectedRoles" class="form-control" asp-items="@btuser.Roles" multiple="multiple"></select>*@
+                    <select name="SelectedRole" class="form-control" asp-items="@btuser.Roles" multiple="multiple"></select>
                 </div>
             </div>
             <hr />

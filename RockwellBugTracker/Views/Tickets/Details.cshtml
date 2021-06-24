@@ -26,7 +26,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden shadow-lg">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
@@ -39,11 +39,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden shadow-lg">
                     <div class="bg-danger b-r-4 card-body">
                         <div class="media static-top-widget">
-                            <div class="align-self-center text-center"></i></div>
+                            <div class="align-self-center text-center"></div>
                             <div class="media-body">
                                 <span class="m-0">Type</span>
                                 <h4 class="mb-0 counter">@Model.TicketType.Name</h4><i class="icon-bg" data-feather="shopping-bag"></i>
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden shadow-lg">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
@@ -66,11 +66,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden shadow-lg">
                     <div class="bg-info b-r-4 card-body">
                         <div class="media static-top-widget">
-                            <div class="align-self-center text-center"></i></div>
+                            <div class="align-self-center text-center"></div>
                             <div class="media-body">
                                 <span class="m-0">Priority</span>
                                 <h4 class="mb-0 counter">@Model.TicketPriority.Name</h4><i class="icon-bg" data-feather="shopping-bag"></i>
@@ -79,14 +79,27 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden shadow-lg">
                     <div class="bg-warning b-r-4 card-body">
                         <div class="media static-top-widget">
-                            <div class="align-self-center text-center"></i></div>
+                            <div class="align-self-center text-center"></div>
                             <div class="media-body">
                                 <span class="m-0">Project:</span>
                                 <h4 class="mb-0 counter">@Model.Project.Name</h4><i class="icon-bg" data-feather="shopping-bag"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-4 col-lg-6">
+                <div class="card o-hidden shadow-lg">
+                    <div class="bg-warning b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center"></div>
+                            <div class="media-body">
+                                <span class="m-0">Assigned To:</span>
+                                <h4 class="mb-0 counter">@Model.DeveloperUser?.FullName</h4><i class="icon-bg" data-feather="shopping-bag"></i>
                             </div>
                         </div>
                     </div>

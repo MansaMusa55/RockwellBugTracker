@@ -81,8 +81,7 @@ namespace RockwellBugTracker.Controllers
             int companyId = User.Identity.GetCompanyId().Value;
 
             model.Ticket = (await _ticketService.GetAllTicketsByCompanyAsync(companyId)).FirstOrDefault(t => t.Id == ticketId);
-            model.Developers = new SelectList(await _projectService.DevelopersOnProjectAsync(model.Ticket.ProjectId),"Id", "Full Name");
-                                         
+            model.Developers = new SelectList(await _projectService.DevelopersOnProjectAsync(model.Ticket.ProjectId), "Id", "FullName");
             return View(model);
         }
 
@@ -118,7 +117,7 @@ namespace RockwellBugTracker.Controllers
 
                 await _historyService.AddHistoryAsync(oldTicket, newTicket, btUser.Id);
             }
-            return RedirectToAction("Details", "Ticket", new { id = viewModel.Ticket.Id });
+            return RedirectToAction("Details", "Tickets", new { id = viewModel.Ticket.Id });
         }
             // GET: Tickets/Details/5
             public async Task<IActionResult> Details(int? id)

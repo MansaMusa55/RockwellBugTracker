@@ -50,17 +50,16 @@ namespace RockwellBugTracker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ManageUserRoles(ManageUserRolesViewModel member)
+        public async Task<IActionResult> ManageUserRoles(ManageUserRolesViewModel member, string selectedRole, string btUserId)
         {
-            BTUser user = _context.Users.Find(member.BTUser.Id);
+            BTUser user = _context.Users.Find(btUserId);
 
             IEnumerable<string> roles = await _rolesService.ListUserRolesAsync(user);
             await _rolesService.RemoveUserFromRolesAsync(user, roles);
-            string userRole = member.SelectedRoles.FirstOrDefault();
 
-            if (Enum.TryParse(userRole, out Roles roleValue))
+            if (Enum.TryParse(selectedRole, out Roles roleValue))
             {
-                await _rolesService.AddUserToRoleAsync(user, userRole);
+                await _rolesService.AddUserToRoleAsync(user, selectedRole);
                 return RedirectToAction("ManageUserRoles");
             }
 

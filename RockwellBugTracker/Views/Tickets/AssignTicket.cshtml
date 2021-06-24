@@ -25,9 +25,12 @@
                                 <div class="col-md-6 col-sm-12">
                                     <label>Select Developer</label>
                                     <div class="form-group">
-                                        <select class="form-control" asp-for="@Model.DeveloperId" asp-items="@Model.Developers" multiple="multiple">
+                                        <select class="form-control" name="DeveloperId" asp-items="Model.Developers" multiple="multiple">
                                             <option>Select Developer</option>
                                         </select>
+                                        @*<select class="form-control" asp-for="@Model.DeveloperId" asp-items="@Model.Developers" multiple="multiple">
+                                            <option>Select Developer</option>
+                                        </select>*@
                                     </div>
                                     <div class="mt-4 form-group">
                                         <button type="submit" class="btn btn-outline-primary">Submit</button>
