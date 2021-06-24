@@ -142,27 +142,43 @@
 
 
 
-                <div class="card card-success card-tabs">
+                <div class="card card-success card-tabs shadow-lg">
                     <div class="card-header p-0 pt-1">
-                        <div class="card-title"><h5 class="text-center">Ticket Information</h5></div>
+                        <div class="card-title"><h4 class="text-center">Company's Ticket Information</h4></div>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
                                 <div class="card">
-                                    <canvas id="myChart"></canvas>
+                                    <div class="card-header p-0 pt-1">
+                                        <div class="card-title"><h5 class="text-center">Tickets by Type</h5></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="myChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="card">
-                                    <canvas id="myChart2"></canvas>
+                                    <div class="card-header p-0 pt-1">
+                                        <div class="card-title"><h5 class="text-center">Tickets by Priority</h5></div>
+                                    </div>
+                                        <div class="card-body">
+                                            <canvas id="myChart2"></canvas>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="col-4">
                                 <div class="card">
-                                    <canvas id="myChart3"></canvas>
+                                    <div class="card-header p-0 pt-1">
+                                        <div class="card-title"><h5 class="text-center">Tickets by Status</h5></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="myChart3"></canvas>
+                                    </div>
                                 </div>
                             </div>
+                 
                         </div>
                     </div>
                 </div>
@@ -294,20 +310,7 @@
         @section scripts{
             <script>
 
-                $(document).ready(function () {
-                    $('#developmentTable').DataTable({
-                        "responsive": true,
-                        "order": [[3, 'dsc']],
-                        "sScrollX": "100%",
-                        columnDefs: [
-                            { targets: [2, 4, 8], visible: false },
-                            { "orderData": 2, targets: [1] },
-                            { "orderData": 4, targets: [3] },
-                            { "orderData": 8, targets: [7] },
-                            { "searchable": false, "targets": 9 },
-                            { targets: '_all', visible: true }
-                        ]
-                    });
+                
                     $('#submittedTable').DataTable({
                         "order": [[3, 'dsc']],
                         "sScrollX": "100%",

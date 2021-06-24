@@ -83,7 +83,7 @@ namespace RockwellBugTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ProjTypeChartMethod()
+        public async Task<JsonResult> TypeChartMethod()
         {
             int companyId = User.Identity.GetCompanyId().Value;
             List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
@@ -120,23 +120,22 @@ namespace RockwellBugTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> DonutMethod()
+        public async Task<JsonResult> PriorityChartMethod()
         {
             int companyId = User.Identity.GetCompanyId().Value;
+            List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
+            var priorities = _context.TicketPriority.ToList();
+            DonutViewModel chartData = new();
+            chartData.labels = priorities.Select(t => t.Name).ToArray();
             Random rnd = new();
 
-            List<Project> projects = (await _projectService.GetAllProjectsByCompany(companyId)).OrderBy(p => p.Id).ToList();
-
-            DonutViewModel chartData = new();
-            chartData.labels = projects.Select(p => p.Name).ToArray();
-
             List<SubData> dsArray = new();
-            List<int> tickets = new();
+            List<int> howManyTickets = new();
             List<string> colors = new();
-
-            foreach (Project prj in projects)
+            //Antonio's Random Colors
+            foreach (TicketPriority priority in priorities)
             {
-                tickets.Add(prj.Tickets.Count());
+                howManyTickets.Add(tickets.Where(t => t.TicketPriorityId == priority.Id).Count());
 
                 // This code will randomly select a color for each element of the data 
                 Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
@@ -147,7 +146,7 @@ namespace RockwellBugTracker.Controllers
 
             SubData temp = new()
             {
-                data = tickets.ToArray(),
+                data = howManyTickets.ToArray(),
                 backgroundColor = colors.ToArray()
             };
             dsArray.Add(temp);
@@ -156,6 +155,81 @@ namespace RockwellBugTracker.Controllers
 
             return Json(chartData);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> StatusChartMethod()
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+            List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
+            var statuses = _context.TicketStatus.ToList();
+            DonutViewModel chartData = new();
+            chartData.labels = statuses.Select(t => t.Name).ToArray();
+            Random rnd = new();
+
+            List<SubData> dsArray = new();
+            List<int> howManyTickets = new();
+            List<string> colors = new();
+            //Antonio's Random Colors
+            foreach (TicketStatus status in statuses)
+            {
+                howManyTickets.Add(tickets.Where(t => t.TicketStatusId == status.Id).Count());
+
+                // This code will randomly select a color for each element of the data 
+                Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                string colorHex = string.Format("#{0:X6}", randomColor.ToArgb() & 0X00FFFFFF);
+
+                colors.Add(colorHex);
+            }
+
+            SubData temp = new()
+            {
+                data = howManyTickets.ToArray(),
+                backgroundColor = colors.ToArray()
+            };
+            dsArray.Add(temp);
+
+            chartData.datasets = dsArray.ToArray();
+
+            return Json(chartData);
+        }
+
+        //[HttpPost]
+        //public async Task<JsonResult> DonutMethod()
+        //{
+        //    int companyId = User.Identity.GetCompanyId().Value;
+        //    Random rnd = new();
+
+        //    List<Project> projects = (await _projectService.GetAllProjectsByCompany(companyId)).OrderBy(p => p.Id).ToList();
+
+        //    DonutViewModel chartData = new();
+        //    chartData.labels = projects.Select(p => p.Name).ToArray();
+
+        //    List<SubData> dsArray = new();
+        //    List<int> tickets = new();
+        //    List<string> colors = new();
+
+        //    foreach (Project prj in projects)
+        //    {
+        //        tickets.Add(prj.Tickets.Count());
+
+        //        // This code will randomly select a color for each element of the data 
+        //        Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+        //        string colorHex = string.Format("#{0:X6}", randomColor.ToArgb() & 0X00FFFFFF);
+
+        //        colors.Add(colorHex);
+        //    }
+
+        //    SubData temp = new()
+        //    {
+        //        data = tickets.ToArray(),
+        //        backgroundColor = colors.ToArray()
+        //    };
+        //    dsArray.Add(temp);
+
+        //    chartData.datasets = dsArray.ToArray();
+
+        //    return Json(chartData);
+        //}
 
         public IActionResult Landing()
         {

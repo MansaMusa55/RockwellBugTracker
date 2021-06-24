@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RockwellBugTracker.Data;
+using RockwellBugTracker.Extensions;
 using RockwellBugTracker.Models;
 using RockwellBugTracker.Models.Enums;
 using RockwellBugTracker.Models.ViewModel;
@@ -19,20 +20,22 @@ namespace RockwellBugTracker.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IBTRoleService _rolesService;
+        private readonly IBTCompanyInfoService _infoService;
 
         public UserRolesController(ApplicationDbContext context,
-                                   IBTRoleService rolesService)
+                                   IBTRoleService rolesService, IBTCompanyInfoService infoService)
         {
             _context = context;
-             _rolesService = rolesService;
+            _rolesService = rolesService;
+            _infoService = infoService;
         }
         [HttpGet]
         public async Task<IActionResult> ManageUserRoles()
         {
             List<ManageUserRolesViewModel> model = new();
-
+            int companyId = User.Identity.GetCompanyId().Value;
             //TODO: Company users
-            List<BTUser> users = _context.Users.ToList();
+            List<BTUser> users = await _infoService.GetAllMembersAsync(companyId);
 
             foreach (var user in users)
             {

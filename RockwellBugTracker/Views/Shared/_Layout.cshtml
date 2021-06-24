@@ -31,7 +31,7 @@
     <!-- Flag icon-->
     <link href="~/css/flag-icon-1.css" type="text/css" rel="stylesheet" />
     <!-- Feather icon-->
-
+    <link href="~/css/datatables-1.css" rel="stylesheet" />
     <link href="~/css/feather-icon.css" type="text/css" rel="stylesheet" />
     <!-- Plugins css start-->
     <link href="~/css/scrollbar.css" type="text/css" rel="stylesheet" />
@@ -428,6 +428,9 @@
     <script src="~/js/tooltip-init.js"></script>
     <script src="~/js/datatable.custom.js"></script>
     <script src="~/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/responsive.bootstrap4.min-1.js"></script>
+    <script src="~/js/dataTables.responsive.min-1.js"></script>
+    <script src="~/js/dataTables.bootstrap4.min-1.js"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="~/js/script.js" asp-append-version="true"></script>
@@ -440,7 +443,7 @@
     <script type="text/javascript">
         $.ajax({
             type: "POST",
-            url: "/Home/ProjTypeChartMethod",
+            url: "/Home/TypeChartMethod",
             data: '{}',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -473,7 +476,7 @@
     <script type="text/javascript">
         $.ajax({
             type: "POST",
-            url: "/Home/DonutMethod",
+            url: "/Home/PriorityChartMethod",
             data: '{}',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -506,7 +509,7 @@
     <script type="text/javascript">
         $.ajax({
             type: "POST",
-            url: "/Home/DonutMethod",
+            url: "/Home/StatusChartMethod",
             data: '{}',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -535,6 +538,22 @@
             }
         });
 
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#developmentTable').DataTable({
+                "responsive": true,
+                "order": [[3, 'dsc']],
+                "sScrollX": "100%",
+                columnDefs: [
+                    { targets: [2, 4, 8], visible: false },
+                    { "orderData": 2, targets: [1] },
+                    { "orderData": 4, targets: [3] },
+                    { "orderData": 8, targets: [7] },
+                    { "searchable": false, "targets": 9 },
+                    { targets: '_all', visible: true }
+                ]
+            });
     </script>
     }
     @*<script>
