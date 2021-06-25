@@ -1,9 +1,14 @@
 ﻿@model RockwellBugTracker.Models.Project
-
+@using RockwellBugTracker.Services.Interfaces
+@using Microsoft.AspNetCore.Identity
+@using RockwellBugTracker.Extensions
 @{
     ViewData["Title"] = "Details";
 }
-
+@inject IBTTicketService TicketService
+@inject IBTImageService ImageService
+@inject UserManager<BTUser> UserManager
+@inject SignInManager<BTUser> SignInManager
 
 <div class="container-fluid">
     <div class="page-title">
@@ -14,7 +19,7 @@
             </div>
             <div class="col offset-4">
                 <a asp-action="Create" class="btn btn-primary btn-block shadow-lg">Create New</a>
-                <a asp-action="AssignUsers" asp-route-projectId="@Model.Id" class="btn btn-primary btn-block shadow-lg">Assign Project</a>
+                <a asp-action="AssignUsers" asp-route-id="@Model.Id" class="btn btn-primary btn-block shadow-lg">Assign Project</a>
             </div>
         </div>
     </div>
@@ -22,46 +27,33 @@
 <div class="container-fluid">
     <div class="row">
 
-        <div class="col-sm-6 col-xl-3 col-lg-6">
+        <div class="col-sm-6 col-xl-4 col-lg-6">
             <div class="card o-hidden">
                 <div class="bg-danger b-r-4 card-body">
                     <div class="media static-top-widget">
                         <div class="align-self-center text-center"></i></div>
                         <div class="media-body">
-                            <span class="m-0">Priority</span>
+                            <span class="m-0">Project Priority</span>
                             <h4 class="mb-0 counter">@Model.ProjectPriority.Name</h4><i class="icon-bg" data-feather="shopping-bag"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-3 col-lg-6">
+        <div class="col-sm-6 col-xl-4 col-lg-6">
             <div class="card o-hidden">
                 <div class="bg-danger b-r-4 card-body">
                     <div class="media static-top-widget">
                         <div class="align-self-center text-center"></i></div>
                         <div class="media-body">
-                            <span class="m-0">Members</span>
+                            <span class="m-0">Project Members</span>
                             <h4 class="mb-0 counter">@Model.Members.Count()</h4><i class="icon-bg" data-feather="shopping-bag"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-3 col-lg-6">
-            <div class="card o-hidden">
-                <div class="bg-warning b-r-4 card-body">
-                    <div class="media static-top-widget">
-                        <div class="align-self-center text-center"></i></div>
-                        <div class="media-body">
-                            <span class="m-0">Project:</span>
-                            <h4 class="mb-0 counter">@Model.Name</h4><i class="icon-bg" data-feather="shopping-bag"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3 col-lg-6">
+        <div class="col-sm-6 col-xl-4 col-lg-6">
             <div class="card o-hidden">
                 <div class="bg-warning b-r-4 card-body">
                     <div class="media static-top-widget">
@@ -75,7 +67,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-9">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="text-center">@Model.Name</h2>
@@ -87,7 +79,7 @@
                                     <tr>
                                         <th>Title</th>
                                         <th>Description</th>
-                                        <th>Members</th>
+
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                     </tr>
@@ -105,80 +97,191 @@
                     </div>
                 </div>
             </div>
+            <div class="col">
+                <!-- About Me Box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Members</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        @foreach (var member in Model.Members)
+                        {
+                            <div class="row">
+                                <div class="col-8">
+
+                                    <strong>@member.FullName</strong>
+                                    <p class="text-muted">
+                                        <span class="users-list-date">@((await TicketService.GetAllTicketsByRoleAsync("Submitter", member.Id)).Count) Submitted</span>
+                                        <span class="users-list-date">@((await TicketService.GetAllDeveloperTicketsByResolvedAsync(member.Id, false)).Count) Open Tickets</span>
+                                    </p>
+                                </div>
+                                <div class="col-4">
+
+                                    <img src="@ImageService.GetUserAvatar(member)" class="img-circle img-fluid sm-sq-img" />
+
+                                </div>
+
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="row">
+            <div class="col-9">
+
+
+
+
+                <div class="card card-success card-tabs shadow-lg">
+                    <div class="card-header p-0 pt-1">
+                        <div class="card-title"><h4 class="text-center">Project Ticket Information</h4></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-header p-0 pt-1">
+                                        <div class="card-title"><h5 class="text-center">Tickets by Type</h5></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="projTypeDetailChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-header p-0 pt-1">
+                                        <div class="card-title"><h5 class="text-center">Tickets by Priority</h5></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="projStatusDetailChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-header p-0 pt-1">
+                                        <div class="card-title"><h5 class="text-center">Tickets by Status</h5></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="projPriorityDetailChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
     </div>
-            <!-- Zero Configuration  Ends-->
-            @*Task 1: List all of the current comments for this ticket
-                Task 2: Give logged in users the ability add a new comment
-            *@
-</div>
-@*<div>
-        <h4>Project</h4>
-        <hr />
-        <dl class="row">
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.StartDate)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.StartDate)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.EndDate)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.EndDate)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.ImageFileName)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.ImageFileName)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.ImageFileData)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.ImageFileData)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.FileContentType)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.FileContentType)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.Archived)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.Archived)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.Company)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.Company.Name)
-            </dd>
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.ProjectPriority)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.ProjectPriority.Id)
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>*@
+    @section scripts{
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
+        <script type="text/javascript">
+            $.ajax({
+                type: "POST",
+                url: "/Home/TypeChartMethod",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    //Donut
+                    var donutChartCanvas = $('#projTypeDetailChart').get(0).getContext('2d')
+                    var donutData = result
+
+                    var donutOptions = {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                    }
+                    //Create pie or douhnut chart
+                    // You can switch between pie and douhnut using the method below.
+                    new Chart(donutChartCanvas, {
+                        type: 'doughnut',
+                        data: donutData,
+                        options: donutOptions
+                    })
+                },
+                failure: function (result) {
+                    alert(result.d);
+                },
+                error: function (result) {
+                    alert(result.d);
+                }
+            });
+
+        </script>
+        <script type="text/javascript">
+            $.ajax({
+                type: "POST",
+                url: "/Home/PriorityChartMethod",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    //Donut
+                    var donutChartCanvas = $('#projPriorityDetailChart').get(0).getContext('2d')
+                    var donutData = result
+
+                    var donutOptions = {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                    }
+                    //Create pie or douhnut chart
+                    // You can switch between pie and douhnut using the method below.
+                    new Chart(donutChartCanvas, {
+                        type: 'doughnut',
+                        data: donutData,
+                        options: donutOptions
+                    })
+                },
+                failure: function (result) {
+                    alert(result.d);
+                },
+                error: function (result) {
+                    alert(result.d);
+                }
+            });
+
+        </script>
+        <script type="text/javascript">
+            $.ajax({
+                type: "POST",
+                url: "/Home/StatusChartMethod",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    //Donut
+                    var donutChartCanvas = $('#projStatusDetailChart').get(0).getContext('2d')
+                    var donutData = result
+
+                    var donutOptions = {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                    }
+                    //Create pie or douhnut chart
+                    // You can switch between pie and douhnut using the method below.
+                    new Chart(donutChartCanvas, {
+                        type: 'doughnut',
+                        data: donutData,
+                        options: donutOptions
+                    })
+                },
+                failure: function (result) {
+                    alert(result.d);
+                },
+                error: function (result) {
+                    alert(result.d);
+                }
+            });
+
+        </script>
+
+    }

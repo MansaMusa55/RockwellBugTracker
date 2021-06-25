@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using RockwellBugTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace RockwellBugTracker.Services.Interfaces
         bool ValidateImageSize(IFormFile file, int maxSize);
         string ContentType(IFormFile file);
         int Size(IFormFile file);
+        string GetUserAvatar(BTUser user);
+            
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using RockwellBugTracker.Models;
 using RockwellBugTracker.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,10 @@ namespace RockwellBugTracker.Services
         {
             var validExt = fileTypes.Contains(ContentType(file));
             return validExt;
+        }
+        public string GetUserAvatar(BTUser user)
+        {
+            return DecodeImage(user.AvatarFileData, user.AvatarContentType);
         }
     }
 }
