@@ -1,9 +1,12 @@
 ﻿@model RockwellBugTracker.Models.Ticket
 
-
+@using Microsoft.AspNetCore.Identity
 @using RockwellBugTracker.Services.Interfaces
 @inject IBTFileService BTFileService
 @inject IBTProjectService BTProjectService
+@inject IBTImageService ImageService
+@inject UserManager<BTUser> UserManager
+@inject SignInManager<BTUser> SignInManager
 
 @{
     ViewData["Title"] = "Details";
@@ -219,16 +222,19 @@
                     <div class="btn-sm btn-dark btn-block">@Model.Comments.Count Comment(s)</div>
                     @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
                     {
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            BTUser btUser = await UserManager.GetUserAsync(User);
 
-                        <div class="media border p-3">
-                            <img src="/images/welcome.png" alt="@comment.User.FullName" class="mr-3 mt-3 rounded-circle" style="width:60px;">
-                            <div class="media-body">
-                                <h4>@comment.User.FullName <small><i>Posted on @comment.Created.ToString("MMM dd , yyyy")</i></small></h4>
-                                <p>@comment.Comment</p>
+                            <div class="media border p-3">
+                                <img src="@ImageService.DecodeImage(btUser.AvatarFileData, btUser.AvatarContentType)" alt="@comment.User.FullName" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                                <div class="media-body">
+                                    <h4>@comment.User.FullName <small><i>Posted on @comment.Created.ToString("MMM dd , yyyy")</i></small></h4>
+                                    <p>@comment.Comment</p>
+                                </div>
                             </div>
-                        </div>
 
-
+                        }
 
                     }
                 </div>
