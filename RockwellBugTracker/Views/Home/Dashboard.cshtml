@@ -228,6 +228,11 @@
                                             <td>@string.Format("{0:MMM dd yyyy}", ticket.Created)</td>
                                             <td>@ticket.OwnerUser?.FullName</td>
                                             <td>@ticket.TicketType.Name</td>
+                                            @if (ticket.TicketPriority.Name == 'Urgent') 
+                                            {
+                                             <td><span class="span badge rounded-pill pill-badge-primary">@ticket.TicketPriority.Name</span></td>
+
+                                            }
                                             <td><span class="span badge rounded-pill pill-badge-secondary">@ticket.TicketPriority.Name</span></td>
                                             <td><a asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-default">Details</a></td>
                                         </tr>
